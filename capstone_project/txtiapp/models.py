@@ -11,3 +11,9 @@ class Image(models.Model):
         return self.text
     
 
+class GeneratedImage(models.Model):
+    image_path = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.image_path
+

@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import history, delete_image
 
 
 urlpatterns = [
@@ -23,5 +24,9 @@ urlpatterns = [
 
     # URL pattern for history view
     path('history/', views.history, name='history'),
+
+    # URL pattern for edit, delete 
+    path('history/', history, name='history'),
+    path('delete/<int:image_id>/', delete_image, name='delete_image'),
 
 ]

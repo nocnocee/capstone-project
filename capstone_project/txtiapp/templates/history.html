@@ -5,8 +5,14 @@
   <div class="image-container">
 
     {% for image in images %}
+    <div class="image-container">
       <img src="{{ image.url }}" alt="Image {{ image.id }}">
-    {% endfor %}
+      <div class="image-buttons">
+        <a href="{% url 'edit_image' image.id %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'delete_image' image.id %}" class="btn btn-danger">Delete</a>
+      </div>
+    </div>
+  {% endfor %}
     
   </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 # we want to use the builtin form for our custom view for sign up
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django.contrib.auth import login as auth_login
@@ -10,6 +11,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .stability_ai import generate_image as kuvasana
 from .models import Image
+from .models import GeneratedImage
+from .forms import GeneratedImageForm
 
 # AWS_ACCESS_KEY = settings.AWS_ACCESS_KEY
 # AWS_SECRET_ACCESS_KEY = settings.AWS_SECRET_ACCESS_KEY
@@ -33,7 +36,6 @@ def generate_image(request):
         # generate an image
         image = kuvasana(text)
         # save the image
-        # render the image in the browser
         # import base64
         # encoded = base64.b64encode(image).decode('utf-8')
         from io import BytesIO
@@ -42,20 +44,70 @@ def generate_image(request):
         image.save(buffer, format='PNG')
         image_bytes = buffer.getvalue()
         encoded = base64.b64encode(image_bytes).decode()
+
+
+        # render the image in the browser
         return render(request, 'generate_image.html', {'image': encoded})
 
     # render the form
     return render(request, 'generate_image.html')
 
 
+# saved image view
+
+def generate_png():
+    # your code to generate the PNG file here
+    # ...
+
+    # save the generated PNG file to a temporary file
+    tmp_file_path = os.path.join(settings.BASE_DIR, 'tmp', 'generated.png')
+    with open(tmp_file_path, 'wb') as f:
+        f.write(png_bytes)
+
+    # open the saved PNG file with Pillow to get the image size and format
+    with Image.open(tmp_file_path) as img:
+        width, height = img.size
+        format = img.format
+
+    # set the image_path attribute of the GeneratedImage model
+    generated_image = GeneratedImage()
+    generated_image.image_path = os.path.join(settings.MEDIA_ROOT, 'generated_images', 'file.png')
+    generated_image.save()
+
+    # move the temporary file to the media directory
+    os.makedirs(os.path.join(settings.MEDIA_ROOT, 'generated_images'), exist_ok=True)
+    os.replace(tmp_file_path, generated_image.image_path)
+
+    return generated_image
+
+
 # history view
 def history(request):
-    images = Image.objects.all()
+    images = GeneratedImage.objects.all()
     return render(request, 'history.html', {'images': images})
 
 
 
-# Create your views here.
+# edit and delete image view
+def edit_generated_image(request, pk):
+    generated_image = get_object_or_404(GeneratedImage, pk=pk)
+    if request.method == 'POST':
+        form = GeneratedImageForm(request.POST, request.FILES, instance=generated_image)
+        if form.is_valid():
+            form.save()
+            return redirect('history')
+    else:
+        form = GeneratedImageForm(instance=generated_image)
+    return render(request, 'edit_generated_image.html', {'form': form})
+
+def delete_image(request, image_id):
+    image = get_object_or_404(GeneratedImage, id=image_id)
+    image.delete()
+    return redirect('history')
+
+
+
+# about view
 
 def about(request):
     return render(request, 'about.html')
