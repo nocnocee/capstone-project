@@ -37,34 +37,13 @@ stability_api = client.StabilityInference(
 
 
 
-# This function is called from txtiapp/views.py
-# def generate_image(text):
-    # url = 'https://api.stability.ai/v1/text2img/generate'
-    # headers = {
-    #     'Authorization': f'Bearer {API_KEY}',
-    #     'Content-Type': 'application/json',
-    # }
-    # data = {
-    #     'text': text,
-    #     'output_format': 'png',
-    # }
-    # # This is the request to the API
-    # response = requests.post(url, headers=headers, json=data)
-    # if response.status_code == 200:
-    #     return response.content
-    # else:
-    #     return None
-
-
-
-
 ############  INITIAL GENERATION PARAM, DISPLAY IMAGE GENERATION, WARNING FOR THE SAFETY FILTER
 # Set up our initial generation parameters.
 
 def generate_image(text):
 
     answers = stability_api.generate(
-        prompt="expansive landscape rolling greens with blue daisies and weeping willow trees under a blue alien sky, artstation, masterful, ghibli",
+        prompt=text,
         seed=992446758, # If a seed is provided, the resulting generated image will be deterministic.
                         # What this means is that as long as all generation parameters remain the same, you can always recall the same image simply by generating it again.
                         # Note: This isn't quite the case for Clip Guided generations, which we'll tackle in a future example notebook.
@@ -91,3 +70,5 @@ def generate_image(text):
             if artifact.type == generation.ARTIFACT_IMAGE:
                 img = Image.open(io.BytesIO(artifact.binary))
                 img.save(str(artifact.seed)+ ".png") # Save our generated images with their seed number as the filename.
+                return img
+            

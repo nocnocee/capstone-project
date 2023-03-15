@@ -10,9 +10,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .stability_ai import generate_image as kuvasana
 
-
-
-
+# AWS_ACCESS_KEY = settings.AWS_ACCESS_KEY
+# AWS_SECRET_ACCESS_KEY = settings.AWS_SECRET_ACCESS_KEY
+# S3_BUCKET = settings.S3_BUCKET
+# S3_BASE_URL = settings.S3_BASE_URL
 
 
 # home view
@@ -31,9 +32,16 @@ def generate_image(request):
         # generate an image
         image = kuvasana(text)
         # save the image
-        image.save(f'{settings.MEDIA_ROOT}/generated_image.png')
         # render the image in the browser
-        return render(request, 'generate_image.html', {'image': image})
+        # import base64
+        # encoded = base64.b64encode(image).decode('utf-8')
+        from io import BytesIO
+        import base64
+        buffer = BytesIO()
+        image.save(buffer, format='PNG')
+        image_bytes = buffer.getvalue()
+        encoded = base64.b64encode(image_bytes).decode()
+        return render(request, 'generate_image.html', {'image': encoded})
 
     # render the form
     return render(request, 'generate_image.html')

@@ -2,13 +2,19 @@
 
 {% block content %}
   <h1>Generated Image</h1>
-  <img src="{{ image }}" alt="Generated Image">
+  <!-- <img src="{{ image }}" alt="Generated Image"> -->
+  {% if image %}
+  <img src="data:image/png;base64,{{ image }}"/>
+  {% endif %}
 
   <form method="post" action="{% url 'generate_image' %}">
     {% csrf_token %}
     <textarea name="text" rows="4" cols="50"></textarea>
-    <button type="submit">Generate Image</button>
+    <input class="btn blue" type="submit" value="GENERATE" />
   </form>
+  <br/>
+  </form>
+
   
 {% endblock %}
 
