@@ -15,8 +15,6 @@ urlpatterns = [
     # URL pattern for the login view
     path('accounts/login/', views.login, name='login'),
 
-    # URL pattern for the logout view
-    path('accounts/logout/', views.logout, name='logout'),
-
-    
+    # URL pattern for about page
+    path('about/', views.about, name='about'),
 ]

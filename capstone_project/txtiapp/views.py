@@ -25,15 +25,16 @@ def generate_image_view(request):
 # register view
 
 def signup(request):
-    return render(request, 'signup.html')
+    return render(request, 'registeration/signup.html')
 
 def login(request):
-    return render(request, 'login.html')
-
-def logout(request):
-    return render(request, 'logout.html')
+    return render(request, 'registeration/login.html')
 
 
 
 
 # Create your views here.
+
+def about(request):
+    return render(request, 'about.html')
+
