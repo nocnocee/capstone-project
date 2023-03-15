@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Image</title>
+</head>
+<body>
+    <h1>Generate Image</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="text"></textarea>
+        <br>
+        <button type="submit">Generate</button>
+    </form>
+</body>
+</html>
