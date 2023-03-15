@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>History</h1>
+  <div class="image-container">
+
+    {% for image in images %}
+      <img src="{{ image.url }}" alt="Image {{ image.id }}">
+    {% endfor %}
+    
+  </div>
+{% endblock %}

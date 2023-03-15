@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .stability_ai import generate_image as kuvasana
+from .models import Image
 
 # AWS_ACCESS_KEY = settings.AWS_ACCESS_KEY
 # AWS_SECRET_ACCESS_KEY = settings.AWS_SECRET_ACCESS_KEY
@@ -46,6 +47,11 @@ def generate_image(request):
     # render the form
     return render(request, 'generate_image.html')
 
+
+# history view
+def history(request):
+    images = Image.objects.all()
+    return render(request, 'history.html', {'images': images})
 
 
 

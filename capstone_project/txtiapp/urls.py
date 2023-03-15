@@ -21,4 +21,7 @@ urlpatterns = [
     # URL pattern for the generate image view
     path('generate_image/', views.generate_image, name='generate_image'),
 
+    # URL pattern for history view
+    path('history/', views.history, name='history'),
+
 ]
