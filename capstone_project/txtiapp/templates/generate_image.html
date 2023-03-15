@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Generated Image</h1>
+  <img src="{{ image }}" alt="Generated Image">
+
+  <form method="post" action="{% url 'generate_image' %}">
+    {% csrf_token %}
+    <textarea name="text" rows="4" cols="50"></textarea>
+    <button type="submit">Generate Image</button>
+  </form>
+  
+{% endblock %}
+

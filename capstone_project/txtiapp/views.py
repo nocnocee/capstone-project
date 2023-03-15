@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .stability_ai import generate_image
 from django.http import HttpResponse
 # we want to use the builtin form for our custom view for sign up
 from django.contrib.auth.forms import UserCreationForm
@@ -9,7 +8,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
-
+from .stability_ai import generate_image as kuvasana
 
 
 
@@ -25,13 +24,19 @@ def home(request):
 
 # generate image view
 
-def generate_image_view(request):
+def generate_image(request):
     if request.method == 'POST':
-        text = request.POST.get('text')
-        image_data = generate_image(text)
-        if image_data:
-            return HttpResponse(image_data, content_type='image/png')
-    return render(request, 'app_name/generate_image.html')
+        # get the text from the form
+        text = request.POST['text']
+        # generate an image
+        image = kuvasana(text)
+        # save the image
+        image.save(f'{settings.MEDIA_ROOT}/generated_image.png')
+        # render the image in the browser
+        return render(request, 'generate_image.html', {'image': image})
+
+    # render the form
+    return render(request, 'generate_image.html')
 
 
 
